@@ -555,18 +555,42 @@
             }, 3000);
         }
 
-        function loadData() {
-            const saved = localStorage.getItem('appleInventory');
-            if (saved) {
-                try { inventory = JSON.parse(saved); } catch (e) { console.error('Erro ao carregar dados:', e); }
-            }
-            render();
-        }
+ // Coloque no início da tag <script> ou logo acima de loadData():
+const API_URL = 'https://api.npoint.io/c812d0a954f4259a5eac/inventory/0'; // Substitua pela URL da sua API
 
-        function saveData() {
-            localStorage.setItem('appleInventory', JSON.stringify(inventory));
-            render();
+async function loadData() {
+    try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        inventory = data.inventory || [];
+        if (data.categories) {
+            categories = { ...defaultCategories, ...data.categories };
         }
+        render();
+    } catch (e) {
+        console.error('Erro ao carregar do banco remoto:', e);
+    }
+}
+
+async function saveData() {
+    // Salva no navegador localmente
+    localStorage.setItem('appleInventory', JSON.stringify(inventory));
+    render();
+
+    // Envia a atualização para a nuvem se estiver autenticado
+    if (isAuthenticated) {
+        try {
+            await fetch(API_URL, {
+                method: 'POST', // Use 'PUT' se estiver usando o jsonbin.io
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ inventory, categories })
+            });
+            showToast('☁️ Dados salvos na nuvem!', 'success');
+        } catch (e) {
+            console.error('Erro ao salvar na nuvem:', e);
+        }
+    }
+}
 
         function render() {
             updateStats();
