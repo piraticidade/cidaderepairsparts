@@ -8,10 +8,9 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            min-height: 100vh; padding: 20px;
         }
         .container { max-width: 1400px; margin: 0 auto; }
         header {
@@ -29,7 +28,7 @@
         .mode-view { background: #dbeafe; color: #1e40af; }
         .mode-edit { background: #d1fae5; color: #065f46; }
         .auth-area { display: flex; align-items: center; gap: 10px; }
-        .btn-login, .btn-logout, .btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-secondary {
+        .btn-login, .btn-logout, .btn-primary, .btn-success, .btn-warning, .btn-danger, .btn-secondary, .btn-info {
             padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.95em;
             font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;
         }
@@ -47,20 +46,16 @@
         .btn-danger:hover { background: #dc2626; }
         .btn-secondary { background: #6b7280; color: white; }
         .btn-secondary:hover { background: #4b5563; }
+        .btn-info { background: #0ea5e9; color: white; }
+        .btn-info:hover { background: #0284c7; transform: translateY(-2px); }
 
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card {
-            background: white; padding: 25px; border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;
-        }
+        .stat-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
         .stat-card i { font-size: 2.5em; color: #667eea; margin-bottom: 10px; }
         .stat-card h3 { color: #333; font-size: 2em; margin: 10px 0; }
         .stat-card p { color: #666; }
 
-        .controls {
-            background: white; padding: 25px; border-radius: 12px;
-            margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+        .controls { background: white; padding: 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .search-box { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
         .search-box input, .search-box select {
             flex: 1; min-width: 200px; padding: 12px 20px; border: 2px solid #e0e0e0;
@@ -80,10 +75,7 @@
         .category-header .count { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 0.9em; }
         .category-content { padding: 20px; }
 
-        .item {
-            border: 1px solid #e0e0e0; border-radius: 10px; padding: 15px;
-            margin-bottom: 15px; transition: all 0.3s; cursor: pointer;
-        }
+        .item { border: 1px solid #e0e0e0; border-radius: 10px; padding: 15px; margin-bottom: 15px; transition: all 0.3s; cursor: pointer; }
         .item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
         .item-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; gap: 10px; }
         .item-title { font-weight: 600; color: #333; flex: 1; }
@@ -91,10 +83,7 @@
         .item-details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.9em; color: #666; }
         .item-detail { display: flex; align-items: center; gap: 5px; }
         .item-detail i { color: #667eea; width: 20px; }
-        .item-comments {
-            margin-top: 10px; padding: 8px; background: #f3f4f6;
-            border-radius: 6px; font-size: 0.85em; color: #555;
-        }
+        .item-comments { margin-top: 10px; padding: 8px; background: #f3f4f6; border-radius: 6px; font-size: 0.85em; color: #555; }
 
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -114,16 +103,12 @@
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;
-            font-size: 1em; transition: border-color 0.3s;
+            width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #667eea; }
         .form-group textarea { resize: vertical; min-height: 80px; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        @media (max-width: 768px) {
-            .form-row { grid-template-columns: 1fr; }
-            header { flex-direction: column; }
-        }
+        @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } header { flex-direction: column; } }
 
         .empty-state { text-align: center; padding: 40px; color: #999; }
         .empty-state i { font-size: 3em; margin-bottom: 15px; }
@@ -137,38 +122,58 @@
         .login-subtitle { color: #666; margin-bottom: 25px; font-size: 0.95em; }
         .password-input-wrapper { position: relative; margin-bottom: 20px; }
         .password-input-wrapper input { padding-right: 45px; text-align: center; font-size: 1.2em; letter-spacing: 4px; }
-        .toggle-password {
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-            cursor: pointer; color: #999; font-size: 1.1em;
-        }
-        .error-message {
-            background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px;
-            margin-bottom: 15px; display: none; font-size: 0.9em;
-        }
+        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #999; font-size: 1.1em; }
+        .error-message { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin-bottom: 15px; display: none; font-size: 0.9em; }
         .error-message.show { display: block; animation: shake 0.4s; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
         .view-field { margin-bottom: 15px; padding: 12px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #667eea; }
         .view-field-label { font-size: 0.8em; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600; }
         .view-field-value { color: #333; font-size: 1.05em; font-weight: 500; }
-        .edit-hint {
-            background: #fef3c7; color: #92400e; padding: 12px; border-radius: 8px;
-            text-align: center; font-size: 0.9em; margin-top: 15px; border: 1px dashed #f59e0b;
-        }
-        .edit-hint i { margin-right: 5px; }
+        .edit-hint { background: #fef3c7; color: #92400e; padding: 12px; border-radius: 8px; text-align: center; font-size: 0.9em; margin-top: 15px; border: 1px dashed #f59e0b; }
         .hidden { display: none !important; }
 
         .cat-list { max-height: 300px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #e0e0e0; border-radius: 8px; }
-        .cat-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; border-bottom: 1px solid #f0f0f0;
-        }
+        .cat-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0; }
         .cat-item:last-child { border-bottom: none; }
         .cat-info { display: flex; align-items: center; gap: 10px; }
         .cat-info i { color: #667eea; font-size: 1.2em; width: 24px; text-align: center; }
         .cat-actions { display: flex; gap: 8px; }
         .cat-actions button { padding: 6px 12px; font-size: 0.85em; }
         .icon-hint { font-size: 0.8em; color: #666; margin-top: 4px; }
+
+        .loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 3000;
+            display: none; align-items: center; justify-content: center;
+            flex-direction: column; color: white;
+        }
+        .loader-overlay.active { display: flex; }
+        .spinner {
+            width: 60px; height: 60px; border: 5px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .server-config {
+            background: #f0f9ff; border: 2px dashed #0ea5e9; border-radius: 10px;
+            padding: 15px; margin-bottom: 20px;
+        }
+        .server-config h4 { color: #0369a1; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .server-status {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: 600;
+        }
+        .status-ok { background: #d1fae5; color: #065f46; }
+        .status-error { background: #fee2e2; color: #991b1b; }
+        .status-loading { background: #fef3c7; color: #92400e; }
+        
+        .sync-notice {
+            background: #fff7ed; border-left: 4px solid #f97316; padding: 12px;
+            border-radius: 6px; margin-bottom: 15px; font-size: 0.9em; color: #9a3412;
+        }
+        .sync-notice i { margin-right: 6px; }
     </style>
 </head>
 <body>
@@ -180,6 +185,9 @@
                 <span id="modeBadge" class="mode-badge mode-view">
                     <i class="fas fa-eye"></i> Modo Visualização
                 </span>
+                <span id="serverStatus" class="server-status status-loading" style="margin-left: 8px;">
+                    <i class="fas fa-circle-notch fa-spin"></i> Verificando servidor...
+                </span>
             </div>
             <div class="auth-area">
                 <button id="authButton" class="btn-login" onclick="handleAuthClick()">
@@ -189,34 +197,16 @@
         </header>
 
         <div class="stats">
-            <div class="stat-card">
-                <i class="fas fa-boxes"></i>
-                <h3 id="totalItems">0</h3>
-                <p>Total de Itens</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-dollar-sign"></i>
-                <h3 id="totalValue">R$ 0</h3>
-                <p>Valor em Estoque</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-laptop"></i>
-                <h3 id="totalMachines">0</h3>
-                <p>Máquinas Completas</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-mobile-alt"></i>
-                <h3 id="totalMobile">0</h3>
-                <p>Dispositivos Mobile</p>
-            </div>
+            <div class="stat-card"><i class="fas fa-boxes"></i><h3 id="totalItems">0</h3><p>Total de Itens</p></div>
+            <div class="stat-card"><i class="fas fa-dollar-sign"></i><h3 id="totalValue">R$ 0</h3><p>Valor em Estoque</p></div>
+            <div class="stat-card"><i class="fas fa-laptop"></i><h3 id="totalMachines">0</h3><p>Máquinas Completas</p></div>
+            <div class="stat-card"><i class="fas fa-mobile-alt"></i><h3 id="totalMobile">0</h3><p>Dispositivos Mobile</p></div>
         </div>
 
         <div class="controls">
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="🔍 Buscar peças...">
-                <select id="categoryFilter">
-                    <option value="">Todas as Categorias</option>
-                </select>
+                <select id="categoryFilter"><option value="">Todas as Categorias</option></select>
             </div>
             <div class="buttons">
                 <button id="btnAdd" class="btn-primary hidden" onclick="openModal()">
@@ -225,17 +215,29 @@
                 <button id="btnManageCats" class="btn-secondary hidden" onclick="openCategoryModal()">
                     <i class="fas fa-tags"></i> Gerenciar Categorias
                 </button>
+                <button id="btnServerConfig" class="btn-info hidden" onclick="openServerModal()">
+                    <i class="fas fa-server"></i> Configurar Servidor
+                </button>
+                <button id="btnFetchServer" class="btn-info hidden" onclick="fetchFromServer()">
+                    <i class="fas fa-sync-alt"></i> Atualizar do Servidor
+                </button>
                 <button class="btn-success" onclick="exportData()">
-                    <i class="fas fa-download"></i> Exportar Dados
+                    <i class="fas fa-download"></i> Exportar JSON
                 </button>
                 <button id="btnImport" class="btn-warning hidden" onclick="document.getElementById('importFile').click()">
-                    <i class="fas fa-upload"></i> Importar Dados
+                    <i class="fas fa-upload"></i> Importar Local
                 </button>
                 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
             </div>
         </div>
 
         <div id="categoriesContainer" class="categories"></div>
+    </div>
+
+    <!-- Loader -->
+    <div id="loaderOverlay" class="loader-overlay">
+        <div class="spinner"></div>
+        <div id="loaderText">Carregando dados do servidor...</div>
     </div>
 
     <!-- Modal de Login -->
@@ -248,9 +250,7 @@
             <form onsubmit="attemptLogin(event)">
                 <div class="password-input-wrapper">
                     <input type="password" id="loginPassword" placeholder="••••" required autofocus>
-                    <span class="toggle-password" onclick="togglePasswordVisibility()">
-                        <i id="passwordIcon" class="fas fa-eye"></i>
-                    </span>
+                    <span class="toggle-password" onclick="togglePasswordVisibility()"><i id="passwordIcon" class="fas fa-eye"></i></span>
                 </div>
                 <div class="buttons" style="justify-content: center;">
                     <button type="submit" class="btn-primary"><i class="fas fa-sign-in-alt"></i> Entrar</button>
@@ -268,13 +268,11 @@
                 <span class="close-modal" onclick="closeViewModal()">&times;</span>
             </div>
             <div id="viewContent"></div>
-            <div class="edit-hint">
-                <i class="fas fa-info-circle"></i> Para editar esta peça, faça login com a senha de administrador.
-            </div>
+            <div class="edit-hint"><i class="fas fa-info-circle"></i> Para editar, faça login (senha: 7766).</div>
         </div>
     </div>
 
-    <!-- Modal de Edição de Peça -->
+    <!-- Modal de Edição -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -283,32 +281,14 @@
             </div>
             <form id="itemForm" onsubmit="saveItem(event)">
                 <input type="hidden" id="itemId">
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <select id="itemCategory" required></select>
-                </div>
-                <div class="form-group">
-                    <label>Descrição</label>
-                    <input type="text" id="itemDescription" required placeholder="Ex: MacBook Pro A2151 128Gb">
-                </div>
+                <div class="form-group"><label>Categoria</label><select id="itemCategory" required></select></div>
+                <div class="form-group"><label>Descrição</label><input type="text" id="itemDescription" required></div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Quantidade</label>
-                        <input type="number" id="itemQuantity" min="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Valor Unitário (R$)</label>
-                        <input type="number" id="itemPrice" step="0.01" min="0" required>
-                    </div>
+                    <div class="form-group"><label>Quantidade</label><input type="number" id="itemQuantity" min="0" required></div>
+                    <div class="form-group"><label>Valor Unitário (R$)</label><input type="number" id="itemPrice" step="0.01" min="0" required></div>
                 </div>
-                <div class="form-group">
-                    <label>Comentários</label>
-                    <textarea id="itemComments" placeholder="Ex: Sem tela, bateria troca, etc."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>URL da Imagem (opcional)</label>
-                    <input type="url" id="itemImage" placeholder="https://exemplo.com/imagem.jpg">
-                </div>
+                <div class="form-group"><label>Comentários</label><textarea id="itemComments"></textarea></div>
+                <div class="form-group"><label>URL da Imagem (opcional)</label><input type="url" id="itemImage" placeholder="https://exemplo.com/imagem.jpg"></div>
                 <div class="buttons" style="justify-content: space-between;">
                     <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salvar</button>
                     <button type="button" id="btnDelete" class="btn-danger hidden" onclick="deleteItem()"><i class="fas fa-trash"></i> Excluir</button>
@@ -318,30 +298,61 @@
         </div>
     </div>
 
-    <!-- Modal de Gerenciamento de Categorias -->
+    <!-- Modal de Categorias -->
     <div id="categoryModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-tags"></i> Gerenciar Categorias</h2>
                 <span class="close-modal" onclick="closeCategoryModal()">&times;</span>
             </div>
-            
             <div class="cat-list" id="categoryList"></div>
-            
             <h3 style="margin-bottom: 15px; color: #333;">Adicionar Nova Categoria</h3>
             <form onsubmit="addCategory(event)">
-                <div class="form-group">
-                    <label>Nome da Categoria</label>
-                    <input type="text" id="newCatName" required placeholder="Ex: Sucata">
-                </div>
+                <div class="form-group"><label>Nome da Categoria</label><input type="text" id="newCatName" required></div>
                 <div class="form-group">
                     <label>Ícone (FontAwesome)</label>
-                    <input type="text" id="newCatIcon" required placeholder="fa-box" value="fa-box">
-                    <div class="icon-hint">Exemplos: fa-laptop, fa-tv, fa-keyboard, fa-microchip, fa-mobile-alt, fa-plug, fa-tools, fa-box, fa-cog</div>
+                    <input type="text" id="newCatIcon" required value="fa-box">
+                    <div class="icon-hint">Ex: fa-laptop, fa-tv, fa-keyboard, fa-microchip, fa-mobile-alt, fa-plug, fa-tools</div>
                 </div>
                 <div class="buttons">
-                    <button type="submit" class="btn-success"><i class="fas fa-plus"></i> Adicionar Categoria</button>
+                    <button type="submit" class="btn-success"><i class="fas fa-plus"></i> Adicionar</button>
                     <button type="button" class="btn-secondary" onclick="closeCategoryModal()">Fechar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Configuração do Servidor -->
+    <div id="serverModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-server"></i> Configurar Servidor (JSONBin)</h2>
+                <span class="close-modal" onclick="closeServerModal()">&times;</span>
+            </div>
+            <div class="sync-notice">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Nota Importante:</strong> Este sistema opera em <strong>Modo Leitura</strong> do servidor. 
+                Para salvar alterações permanentes no banco de dados online, você deve <strong>Exportar o JSON</strong> após editar e colar o conteúdo no site do JSONBin.io.
+            </div>
+            <form onsubmit="saveServerConfig(event)">
+                <div class="form-group">
+                    <label>URL do JSONBin</label>
+                    <input type="url" id="serverUrl" required placeholder="https://api.jsonbin.io/v3/b/...">
+                </div>
+                <div class="form-group">
+                    <label>Chave de API (X-Master-Key) <span style="font-weight:400; color:#666;">(Opcional, se o Bin for público)</span></label>
+                    <input type="text" id="serverApiKey" placeholder="Cole sua chave aqui (opcional)">
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="autoFetch" style="width: auto;">
+                        Carregar automaticamente ao abrir a página
+                    </label>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salvar Configuração</button>
+                    <button type="button" class="btn-info" onclick="testServerConnection()"><i class="fas fa-plug"></i> Testar Conexão</button>
+                    <button type="button" class="btn-secondary" onclick="closeServerModal()">Fechar</button>
                 </div>
             </form>
         </div>
@@ -351,10 +362,9 @@
         const ADMIN_PASSWORD = '7766';
         const AUTH_STORAGE_KEY = 'appleInventoryAuth';
         const CAT_STORAGE_KEY = 'appleInventoryCategories';
-        const API_URL = 'https://api.npoint.io/c812d0a954f4259a5eac/inventory/0';
+        const SERVER_CONFIG_KEY = 'appleInventoryServerConfig';
         let isAuthenticated = false;
 
-        // Categorias padrão
         const defaultCategories = {
             'machines': { name: 'Máquinas Completas', icon: 'fa-laptop' },
             'screens': { name: 'Telas', icon: 'fa-tv' },
@@ -366,15 +376,222 @@
         };
 
         let categories = {};
-        let inventory = [];
+        // URL padrão atualizada para o seu JSONBin.io
+        let serverConfig = { 
+            url: 'https://api.jsonbin.io/v3/b/6abeec22ac6210605a0aaa48', 
+            apiKey: '', 
+            autoFetch: true 
+        };
+        
+        let inventory = []; // Será preenchido pelo servidor ou fallback local
+
+        const fallbackInventory = [
+            {id: 2, category: 'machines', description: 'Mac Pro 2013 A1481 erro grafico', quantity: 1, price: 1500, comments: 'casa'},
+            {id: 3, category: 'machines', description: 'Macbook Air M1 A2337 8Gb 256Gb', quantity: 1, price: 4000, comments: 'alugado'},
+            {id: 4, category: 'boards', description: 'Placa MacBook Pro A2151 128Gb + topcase funcionando com touchid', quantity: 1, price: 1200, comments: 'sem tela'},
+            {id: 5, category: 'accessories', description: 'Timecapsule 2Tb funcionando', quantity: 3, price: 500, comments: ''},
+            {id: 6, category: 'boards', description: 'MacBook Pro A2141', quantity: 1, price: 3000, comments: 'bateria troca'},
+            {id: 7, category: 'screens', description: 'Tela iMac A1419 27pol trincado borda', quantity: 1, price: 1500, comments: ''},
+            {id: 8, category: 'topcases', description: 'Topcases A1708 Spacegray', quantity: 3, price: 500, comments: ''},
+            {id: 9, category: 'topcases', description: 'Topcase A1707 Spacegray', quantity: 2, price: 500, comments: ''},
+            {id: 10, category: 'screens', description: 'Tela A1708 Silver', quantity: 2, price: 1500, comments: ''},
+            {id: 11, category: 'topcases', description: 'Topcases A1708 Silver', quantity: 2, price: 500, comments: ''},
+            {id: 12, category: 'accessories', description: 'Ventoinha A1418', quantity: 4, price: 200, comments: ''},
+            {id: 13, category: 'screens', description: 'Tela A1534 Space gray', quantity: 1, price: 800, comments: 'tem topcase e placa'},
+            {id: 14, category: 'accessories', description: 'Ventoinha A1318', quantity: 2, price: 150, comments: ''},
+            {id: 15, category: 'accessories', description: 'Ventoinha A1319', quantity: 2, price: 180, comments: ''},
+            {id: 16, category: 'accessories', description: 'SSD 128Gb A1708', quantity: 2, price: 300, comments: ''},
+            {id: 17, category: 'screens', description: 'Tela A1932 Spacegray nota 9', quantity: 0, price: 1200, comments: ''},
+            {id: 18, category: 'screens', description: 'Tela A1932 Silver nota 9.5', quantity: 0, price: 1300, comments: ''},
+            {id: 19, category: 'topcases', description: 'Topcase A1534 dourado', quantity: 1, price: 500, comments: ''},
+            {id: 20, category: 'accessories', description: 'Trackpad A1534 dourado', quantity: 1, price: 350, comments: ''},
+            {id: 21, category: 'screens', description: 'tela A2141 silver/space', quantity: 1, price: 2500, comments: 'spacegray, silver'},
+            {id: 22, category: 'screens', description: 'Tela A1418 SD F1', quantity: 2, price: 1500, comments: 'LM215WF3(SD)(D1)'},
+            {id: 23, category: 'screens', description: 'Tela iMac M1 Azul defeito listras', quantity: 2, price: 1500, comments: 'casa | dep remoto'},
+            {id: 24, category: 'screens', description: 'Tela iMac M1 branca defeito linha', quantity: 1, price: 1500, comments: 'dep remoto'},
+            {id: 25, category: 'topcases', description: 'Topcase A2337 spacegray (sem trackpad)', quantity: 1, price: 1100, comments: 'nova'},
+            {id: 26, category: 'accessories', description: 'Trackpad A1708 Silver', quantity: 1, price: 400, comments: 'casa'},
+            {id: 27, category: 'screens', description: 'Tela iMac Pro', quantity: 1, price: 5000, comments: 'casa'},
+            {id: 28, category: 'boards', description: 'A1708 placa/topcase full silver sem tela', quantity: 1, price: 1500, comments: 'casa'},
+            {id: 29, category: 'topcases', description: 'topcase A2141 silver/space', quantity: 2, price: 1000, comments: 'casa'},
+            {id: 30, category: 'boards', description: 'A2179 completo teclado trocando tecla digital', quantity: 1, price: 2500, comments: 'casa'},
+            {id: 31, category: 'boards', description: 'Placa mae A3113 touch/id Macbook Air M3', quantity: 1, price: 3000, comments: 'casa nunca ativada'},
+            {id: 32, category: 'screens', description: 'Tela A3113 Macbook Air M3 Midnight', quantity: 1, price: 2900, comments: 'casa'},
+            {id: 34, category: 'topcases', description: 'Topcase A2337 Silver sem trackpad nova', quantity: 1, price: 1000, comments: 'casa'},
+            {id: 35, category: 'defective', description: 'MacBook Air 2015 defeito placa', quantity: 1, price: 500, comments: ''},
+            {id: 36, category: 'defective', description: 'MacBook Air 2017', quantity: 1, price: 600, comments: ''},
+            {id: 37, category: 'defective', description: 'Macbook Air A1465', quantity: 3, price: 200, comments: ''},
+            {id: 38, category: 'defective', description: 'Placa A1706 com touchid sem icloud', quantity: 1, price: 300, comments: ''},
+            {id: 39, category: 'defective', description: 'Placa A1708 icloud off', quantity: 1, price: 0, comments: ''},
+            {id: 40, category: 'defective', description: 'Placa A1932 2018 icloud off', quantity: 1, price: 500, comments: ''},
+            {id: 41, category: 'defective', description: 'Placa iMac Pro 2017', quantity: 1, price: 2000, comments: ''},
+            {id: 42, category: 'mobile', description: 'iPad 6 gen A1893 erro nand em DFU iCloud off', quantity: 1, price: 700, comments: ''},
+            {id: 43, category: 'mobile', description: 'iPad Air 2 A1566', quantity: 1, price: 400, comments: ''},
+            {id: 44, category: 'mobile', description: 'iPad 8 A2270 dourado on', quantity: 1, price: 800, comments: ''},
+            {id: 45, category: 'mobile', description: 'iPad 6 A1893 branco off', quantity: 1, price: 600, comments: ''},
+            {id: 46, category: 'mobile', description: 'iPad 7 A2197 preto off', quantity: 1, price: 700, comments: ''},
+            {id: 47, category: 'mobile', description: 'iPad 8 A2270 preto off', quantity: 1, price: 800, comments: ''},
+            {id: 48, category: 'mobile', description: 'Watch Series 6 44MM off', quantity: 1, price: 500, comments: ''},
+            {id: 49, category: 'mobile', description: 'Watch Series 7 41MM off', quantity: 1, price: 700, comments: ''},
+            {id: 50, category: 'mobile', description: 'Watch Series SE on', quantity: 1, price: 500, comments: ''},
+            {id: 51, category: 'defective', description: 'iMac A1312 rearhouse completa tela vidro', quantity: 1, price: 700, comments: ''},
+            {id: 52, category: 'defective', description: 'iPad Air 2 A1566 (sucata)', quantity: 1, price: 400, comments: ''},
+            {id: 53, category: 'machines', description: 'Macbook Air M1 A2337 8Gb 256Gb sem tela', quantity: 1, price: 2500, comments: 'sem tela'},
+            {id: 54, category: 'accessories', description: 'Memória DDR3 2Gb', quantity: 30, price: 100, comments: 'para macbook pro A2178 2010/2011'},
+            {id: 55, category: 'machines', description: 'iMac 2017 8Gb 240Gb SSD', quantity: 1, price: 3000, comments: 'Carlos'},
+            {id: 56, category: 'machines', description: 'iMac 2019 i5 8Gb 240Gb SSD', quantity: 1, price: 4000, comments: 'Carlos'}
+        ];
+
+        function loadServerConfig() {
+            const saved = localStorage.getItem(SERVER_CONFIG_KEY);
+            if (saved) {
+                try { serverConfig = JSON.parse(saved); } 
+                catch (e) { serverConfig = { url: 'https://api.jsonbin.io/v3/b/6abeec22ac6210605a0aaa48', apiKey: '', autoFetch: true }; }
+            }
+            updateServerStatus();
+        }
+
+        function saveServerConfigData() {
+            localStorage.setItem(SERVER_CONFIG_KEY, JSON.stringify(serverConfig));
+        }
+
+        function updateServerStatus() {
+            const status = document.getElementById('serverStatus');
+            if (serverConfig.url) {
+                status.className = 'server-status status-ok';
+                status.innerHTML = '<i class="fas fa-check-circle"></i> JSONBin configurado';
+            } else {
+                status.className = 'server-status status-loading';
+                status.innerHTML = '<i class="fas fa-database"></i> Dados locais';
+            }
+        }
+
+        function openServerModal() {
+            if (!isAuthenticated) return;
+            document.getElementById('serverUrl').value = serverConfig.url || '';
+            document.getElementById('serverApiKey').value = serverConfig.apiKey || '';
+            document.getElementById('autoFetch').checked = serverConfig.autoFetch || false;
+            document.getElementById('serverModal').classList.add('active');
+        }
+
+        function closeServerModal() {
+            document.getElementById('serverModal').classList.remove('active');
+        }
+
+        function saveServerConfig(event) {
+            event.preventDefault();
+            serverConfig.url = document.getElementById('serverUrl').value.trim();
+            serverConfig.apiKey = document.getElementById('serverApiKey').value.trim();
+            serverConfig.autoFetch = document.getElementById('autoFetch').checked;
+            saveServerConfigData();
+            updateServerStatus();
+            closeServerModal();
+            showToast('✅ Configuração salva!', 'success');
+        }
+
+        function getHeaders() {
+            const headers = { 'Cache-Control': 'no-cache' };
+            if (serverConfig.apiKey) {
+                headers['X-Master-Key'] = serverConfig.apiKey;
+            }
+            return headers;
+        }
+
+        async function testServerConnection() {
+            const url = document.getElementById('serverUrl').value.trim();
+            if (!url) { showToast('❌ Informe uma URL', 'error'); return; }
+            
+            showLoader('Testando conexão...');
+            try {
+                const response = await fetch(url, { method: 'GET', cache: 'no-store', headers: getHeaders() });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                hideLoader();
+                
+                // JSONBin v3 retorna os dados dentro de "record"
+                const rawData = data.record ? data.record : data;
+                const count = Array.isArray(rawData) ? rawData.length : (rawData.inventory ? rawData.inventory.length : 0);
+                showToast(`✅ Conexão OK! ${count} itens encontrados.`, 'success');
+            } catch (err) {
+                hideLoader();
+                showToast(`❌ Erro: ${err.message}. Verifique a URL e a Chave de API.`, 'error');
+            }
+        }
+
+        async function fetchFromServer() {
+            if (!serverConfig.url) {
+                showToast('⚠️ Configure a URL do servidor primeiro', 'error');
+                openServerModal();
+                return;
+            }
+            
+            showLoader('Carregando dados do JSONBin...');
+            try {
+                const response = await fetch(serverConfig.url, { 
+                    method: 'GET', 
+                    cache: 'no-store',
+                    headers: getHeaders()
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                
+                // JSONBin v3 encapsula os dados em "record"
+                const rawData = data.record ? data.record : data;
+                
+                let newData;
+                if (Array.isArray(rawData)) {
+                    newData = rawData;
+                } else if (rawData.inventory && Array.isArray(rawData.inventory)) {
+                    newData = rawData.inventory;
+                    if (rawData.categories) {
+                        categories = { ...defaultCategories, ...rawData.categories };
+                        localStorage.setItem(CAT_STORAGE_KEY, JSON.stringify(categories));
+                        populateCategoryDropdowns();
+                    }
+                } else {
+                    throw new Error('Formato JSON inválido');
+                }
+                
+                // Limpeza robusta de dados (remove espaços nas chaves e valores, comum em exports de Excel)
+                newData = newData.map(item => {
+                    const clean = {};
+                    Object.keys(item).forEach(key => {
+                        const cleanKey = key.trim();
+                        let val = item[key];
+                        if (typeof val === 'string') val = val.trim();
+                        clean[cleanKey] = val;
+                    });
+                    return clean;
+                });
+                
+                inventory = newData;
+                saveData();
+                showToast(`✅ ${newData.length} itens carregados do servidor com sucesso!`, 'success');
+                hideLoader();
+            } catch (err) {
+                hideLoader();
+                showToast(`❌ Erro ao carregar: ${err.message}. Usando dados locais.`, 'error');
+                // Fallback para dados locais se o servidor falhar
+                if (inventory.length === 0) {
+                    inventory = [...fallbackInventory];
+                    saveData();
+                }
+            }
+        }
+
+        function showLoader(text = 'Carregando...') {
+            document.getElementById('loaderText').textContent = text;
+            document.getElementById('loaderOverlay').classList.add('active');
+        }
+
+        function hideLoader() {
+            document.getElementById('loaderOverlay').classList.remove('active');
+        }
 
         function loadCategories() {
             const saved = localStorage.getItem(CAT_STORAGE_KEY);
-            if (saved) {
-                try { categories = JSON.parse(saved); } catch (e) { categories = {...defaultCategories}; }
-            } else {
-                categories = {...defaultCategories};
-            }
+            if (saved) { try { categories = JSON.parse(saved); } catch (e) { categories = {...defaultCategories}; } }
+            else { categories = {...defaultCategories}; }
         }
 
         function saveCategories() {
@@ -387,16 +604,13 @@
             const filterSelect = document.getElementById('categoryFilter');
             const itemSelect = document.getElementById('itemCategory');
             const currentFilter = filterSelect.value;
-            
             filterSelect.innerHTML = '<option value="">Todas as Categorias</option>';
             itemSelect.innerHTML = '';
-            
             Object.keys(categories).forEach(key => {
                 const cat = categories[key];
                 filterSelect.innerHTML += `<option value="${key}">${cat.name}</option>`;
                 itemSelect.innerHTML += `<option value="${key}">${cat.name}</option>`;
             });
-            
             filterSelect.value = currentFilter;
         }
 
@@ -411,31 +625,26 @@
             const authBtn = document.getElementById('authButton');
             const btnAdd = document.getElementById('btnAdd');
             const btnImport = document.getElementById('btnImport');
-            const btnDelete = document.getElementById('btnDelete');
             const btnManageCats = document.getElementById('btnManageCats');
+            const btnServerConfig = document.getElementById('btnServerConfig');
+            const btnFetchServer = document.getElementById('btnFetchServer');
 
             if (isAuthenticated) {
                 badge.className = 'mode-badge mode-edit';
                 badge.innerHTML = '<i class="fas fa-edit"></i> Modo Edição';
                 authBtn.className = 'btn-logout';
                 authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> <span>Sair</span>';
-                btnAdd.classList.remove('hidden');
-                btnImport.classList.remove('hidden');
-                btnManageCats.classList.remove('hidden');
+                [btnAdd, btnImport, btnManageCats, btnServerConfig, btnFetchServer].forEach(b => b.classList.remove('hidden'));
             } else {
                 badge.className = 'mode-badge mode-view';
                 badge.innerHTML = '<i class="fas fa-eye"></i> Modo Visualização';
                 authBtn.className = 'btn-login';
                 authBtn.innerHTML = '<i class="fas fa-lock"></i> <span>Entrar</span>';
-                btnAdd.classList.add('hidden');
-                btnImport.classList.add('hidden');
-                btnManageCats.classList.add('hidden');
+                [btnAdd, btnImport, btnManageCats, btnServerConfig, btnFetchServer].forEach(b => b.classList.add('hidden'));
             }
         }
 
-        function handleAuthClick() {
-            if (isAuthenticated) { logout(); } else { openLoginModal(); }
-        }
+        function handleAuthClick() { if (isAuthenticated) logout(); else openLoginModal(); }
 
         function openLoginModal() {
             document.getElementById('loginModal').classList.add('active');
@@ -453,28 +662,21 @@
         function togglePasswordVisibility() {
             const input = document.getElementById('loginPassword');
             const icon = document.getElementById('passwordIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fas fa-eye-slash';
-            } else {
-                input.type = 'password';
-                icon.className = 'fas fa-eye';
-            }
+            if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash'; }
+            else { input.type = 'password'; icon.className = 'fas fa-eye'; }
         }
 
         function attemptLogin(event) {
             event.preventDefault();
-            const password = document.getElementById('loginPassword').value;
-            if (password === ADMIN_PASSWORD) {
+            if (document.getElementById('loginPassword').value === ADMIN_PASSWORD) {
                 isAuthenticated = true;
                 sessionStorage.setItem(AUTH_STORAGE_KEY, 'authenticated');
                 updateUIForAuth();
                 closeLoginModal();
-                showToast('✅ Acesso concedido! Modo edição ativado.', 'success');
+                showToast('✅ Acesso concedido!', 'success');
             } else {
                 document.getElementById('errorMessage').classList.add('show');
                 document.getElementById('loginPassword').value = '';
-                document.getElementById('loginPassword').focus();
             }
         }
 
@@ -483,58 +685,32 @@
                 isAuthenticated = false;
                 sessionStorage.removeItem(AUTH_STORAGE_KEY);
                 updateUIForAuth();
-                showToast('🔒 Sessão encerrada. Modo visualização ativado.', 'info');
+                showToast('🔒 Sessão encerrada.', 'info');
             }
         }
 
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
-            const colors = { success: '#10b981', error: '#ef4444', info: '#667eea', warning: '#f59e0b' };
-            toast.style.cssText = `position: fixed; top: 20px; right: 20px; background: ${colors[type]}; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 2000; font-weight: 600; animation: slideIn 0.3s ease;`;
+            const colors = { success: '#10b981', error: '#ef4444', info: '#667eea' };
+            toast.style.cssText = `position: fixed; top: 20px; right: 20px; background: ${colors[type]}; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 2000; font-weight: 600;`;
             toast.textContent = message;
             document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        async function loadData() {
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                inventory = data.inventory || data || [];
-                if (data.categories) {
-                    categories = { ...defaultCategories, ...data.categories };
-                }
-                render();
-            } catch (e) {
-                console.error('Erro ao carregar dados do banco remoto:', e);
-                const saved = localStorage.getItem('appleInventory');
-                if (saved) {
-                    try { inventory = JSON.parse(saved); } catch (err) {}
-                }
-                render();
+        function loadData() {
+            const saved = localStorage.getItem('appleInventory');
+            if (saved) { 
+                try { inventory = JSON.parse(saved); } catch (e) { inventory = [...fallbackInventory]; } 
+            } else {
+                inventory = [...fallbackInventory];
             }
+            render();
         }
 
-        async function saveData() {
+        function saveData() {
             localStorage.setItem('appleInventory', JSON.stringify(inventory));
             render();
-
-            if (isAuthenticated) {
-                try {
-                    await fetch(API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ inventory, categories })
-                    });
-                    showToast('☁️ Dados salvos na nuvem!', 'success');
-                } catch (e) {
-                    console.error('Erro ao salvar na nuvem:', e);
-                    showToast('⚠️ Salvo apenas localmente', 'warning');
-                }
-            }
         }
 
         function render() {
@@ -542,10 +718,8 @@
             const container = document.getElementById('categoriesContainer');
             const search = document.getElementById('searchInput').value.toLowerCase();
             const filter = document.getElementById('categoryFilter').value;
-
             container.innerHTML = '';
             const displayCats = {};
-            
             inventory.forEach(item => {
                 if (search && !item.description.toLowerCase().includes(search)) return;
                 if (filter && item.category !== filter) return;
@@ -559,7 +733,6 @@
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'category';
                 const totalValue = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                
                 categoryDiv.innerHTML = `
                     <div class="category-header">
                         <h2><i class="fas ${catInfo.icon}"></i> ${catInfo.name}</h2>
@@ -589,31 +762,23 @@
             }
         }
 
-        function handleItemClick(id) {
-            if (isAuthenticated) { editItem(id); } else { viewItem(id); }
-        }
+        function handleItemClick(id) { if (isAuthenticated) editItem(id); else viewItem(id); }
 
         function updateStats() {
             const totalItems = inventory.reduce((sum, item) => sum + item.quantity, 0);
             const totalValue = inventory.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            const machineCats = Object.keys(categories).filter(k => categories[k].name.toLowerCase().includes('máquina') || categories[k].name.toLowerCase().includes('completa'));
-            const mobileCats = Object.keys(categories).filter(k => categories[k].name.toLowerCase().includes('mobile') || categories[k].name.toLowerCase().includes('celular') || categories[k].name.toLowerCase().includes('ipad') || categories[k].name.toLowerCase().includes('watch'));
-
-            const totalMachines = inventory.filter(item => machineCats.includes(item.category)).reduce((sum, item) => sum + item.quantity, 0);
-            const totalMobile = inventory.filter(item => mobileCats.includes(item.category)).reduce((sum, item) => sum + item.quantity, 0);
-
+            const totalMachines = inventory.filter(i => i.category === 'machines').reduce((s, i) => s + i.quantity, 0);
+            const totalMobile = inventory.filter(i => i.category === 'mobile').reduce((s, i) => s + i.quantity, 0);
             document.getElementById('totalItems').textContent = totalItems;
             document.getElementById('totalValue').textContent = `R$ ${totalValue.toFixed(2)}`;
-            document.getElementById('totalMachines').textContent = totalMachines || inventory.filter(i => i.category === 'machines').reduce((s, i) => s + i.quantity, 0);
-            document.getElementById('totalMobile').textContent = totalMobile || inventory.filter(i => i.category === 'mobile').reduce((s, i) => s + i.quantity, 0);
+            document.getElementById('totalMachines').textContent = totalMachines;
+            document.getElementById('totalMobile').textContent = totalMobile;
         }
 
         function viewItem(id) {
             const item = inventory.find(i => i.id === id);
             if (!item) return;
             const catInfo = categories[item.category] || { name: item.category, icon: 'fa-box' };
-
             document.getElementById('viewContent').innerHTML = `
                 <div class="view-field"><div class="view-field-label">Categoria</div><div class="view-field-value"><i class="fas ${catInfo.icon}"></i> ${catInfo.name}</div></div>
                 <div class="view-field"><div class="view-field-label">Descrição</div><div class="view-field-value">${item.description}</div></div>
@@ -628,7 +793,7 @@
         function closeViewModal() { document.getElementById('viewModal').classList.remove('active'); }
 
         function openModal() {
-            if (!isAuthenticated) { showToast('🔒 Faça login para adicionar peças', 'error'); openLoginModal(); return; }
+            if (!isAuthenticated) { showToast('🔒 Faça login', 'error'); openLoginModal(); return; }
             document.getElementById('editModal').classList.add('active');
             document.getElementById('modalTitle').textContent = 'Adicionar Peça';
             document.getElementById('itemForm').reset();
@@ -642,7 +807,6 @@
             if (!isAuthenticated) { viewItem(id); return; }
             const item = inventory.find(i => i.id === id);
             if (!item) return;
-
             document.getElementById('itemId').value = item.id;
             document.getElementById('itemCategory').value = item.category;
             document.getElementById('itemDescription').value = item.description;
@@ -650,7 +814,6 @@
             document.getElementById('itemPrice').value = item.price;
             document.getElementById('itemComments').value = item.comments || '';
             document.getElementById('itemImage').value = item.image || '';
-            
             document.getElementById('modalTitle').textContent = 'Editar Peça';
             document.getElementById('btnDelete').classList.remove('hidden');
             document.getElementById('editModal').classList.add('active');
@@ -659,18 +822,17 @@
         function deleteItem() {
             const id = parseInt(document.getElementById('itemId').value);
             if (!id) return;
-            if (confirm('Tem certeza que deseja excluir esta peça? Esta ação não pode ser desfeita.')) {
+            if (confirm('Tem certeza que deseja excluir esta peça?')) {
                 inventory = inventory.filter(i => i.id !== id);
                 saveData();
                 closeEditModal();
-                showToast('🗑️ Peça excluída com sucesso!', 'success');
+                showToast('🗑️ Peça excluída!', 'success');
             }
         }
 
         function saveItem(event) {
             event.preventDefault();
-            if (!isAuthenticated) { showToast('🔒 Acesso negado', 'error'); return; }
-            
+            if (!isAuthenticated) return;
             const id = document.getElementById('itemId').value;
             const itemData = {
                 category: document.getElementById('itemCategory').value,
@@ -680,50 +842,41 @@
                 comments: document.getElementById('itemComments').value,
                 image: document.getElementById('itemImage').value
             };
-
             if (id) {
                 const index = inventory.findIndex(i => i.id == id);
-                if (index !== -1) inventory[index] = { ...index[index], ...itemData };
+                if (index !== -1) inventory[index] = { ...inventory[index], ...itemData };
             } else {
                 const newId = Math.max(...inventory.map(i => i.id), 0) + 1;
                 inventory.push({ id: newId, ...itemData });
             }
             saveData();
             closeEditModal();
-            showToast('✅ Peça salva com sucesso!', 'success');
+            showToast('✅ Peça salva localmente!', 'success');
         }
 
-        // ===== GERENCIAMENTO DE CATEGORIAS =====
         function openCategoryModal() {
             if (!isAuthenticated) return;
             renderCategoryList();
             document.getElementById('categoryModal').classList.add('active');
         }
 
-        function closeCategoryModal() {
-            document.getElementById('categoryModal').classList.remove('active');
-        }
+        function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('active'); }
 
         function renderCategoryList() {
             const list = document.getElementById('categoryList');
             list.innerHTML = '';
-            
             Object.keys(categories).forEach(key => {
                 const cat = categories[key];
                 const itemCount = inventory.filter(i => i.category === key).length;
-                
                 const div = document.createElement('div');
                 div.className = 'cat-item';
                 div.innerHTML = `
                     <div class="cat-info">
                         <i class="fas ${cat.icon}"></i>
-                        <div>
-                            <strong>${cat.name}</strong>
-                            <div style="font-size: 0.8em; color: #666;">${itemCount} item(ns)</div>
-                        </div>
+                        <div><strong>${cat.name}</strong><div style="font-size: 0.8em; color: #666;">${itemCount} item(ns)</div></div>
                     </div>
                     <div class="cat-actions">
-                        ${!defaultCategories[key] ? `<button class="btn-danger" onclick="deleteCategory('${key}')" title="Excluir"><i class="fas fa-trash"></i></button>` : '<span style="font-size:0.8em; color:#999; padding: 6px;">Padrão</span>'}
+                        ${!defaultCategories[key] ? `<button class="btn-danger" onclick="deleteCategory('${key}')"><i class="fas fa-trash"></i></button>` : '<span style="font-size:0.8em; color:#999; padding: 6px;">Padrão</span>'}
                     </div>
                 `;
                 list.appendChild(div);
@@ -734,26 +887,20 @@
             event.preventDefault();
             const name = document.getElementById('newCatName').value.trim();
             let icon = document.getElementById('newCatIcon').value.trim();
-            
             if (!icon.startsWith('fa-')) icon = 'fa-' + icon;
-            
             const key = 'cat_' + Date.now();
             categories[key] = { name, icon };
             saveCategories();
-            
             document.getElementById('newCatName').value = '';
             document.getElementById('newCatIcon').value = 'fa-box';
             renderCategoryList();
-            showToast('✅ Categoria adicionada com sucesso!', 'success');
+            showToast('✅ Categoria adicionada!', 'success');
         }
 
         function deleteCategory(key) {
             const itemCount = inventory.filter(i => i.category === key).length;
-            if (itemCount > 0) {
-                alert(`Não é possível excluir esta categoria pois ela possui ${itemCount} item(ns). Mova ou exclua os itens primeiro.`);
-                return;
-            }
-            if (confirm(`Deseja realmente excluir a categoria "${categories[key].name}"?`)) {
+            if (itemCount > 0) { alert(`Não é possível excluir: ${itemCount} item(ns) nesta categoria.`); return; }
+            if (confirm(`Excluir categoria "${categories[key].name}"?`)) {
                 delete categories[key];
                 saveCategories();
                 renderCategoryList();
@@ -761,7 +908,6 @@
             }
         }
 
-        // ===== EXPORTAR / IMPORTAR =====
         function exportData() {
             const dataStr = JSON.stringify({ inventory, categories }, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
@@ -770,20 +916,19 @@
             link.href = url;
             link.download = `pecas-apple-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
-            showToast('📥 Dados exportados!', 'success');
+            showToast('📥 JSON Exportado! Cole este conteúdo no JSONBin.io para atualizar o servidor.', 'success');
         }
 
         function importData(input) {
-            if (!isAuthenticated) { showToast('🔒 Faça login para importar dados', 'error'); openLoginModal(); return; }
+            if (!isAuthenticated) { showToast('🔒 Faça login', 'error'); openLoginModal(); return; }
             const file = input.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
                     if (data.inventory && Array.isArray(data.inventory)) {
-                        if (confirm(`Importar ${data.inventory.length} itens? Isso substituirá os dados atuais.`)) {
+                        if (confirm(`Importar ${data.inventory.length} itens?`)) {
                             inventory = data.inventory;
                             if (data.categories) {
                                 categories = { ...defaultCategories, ...data.categories };
@@ -791,14 +936,10 @@
                             }
                             saveData();
                             populateCategoryDropdowns();
-                            showToast('✅ Dados importados com sucesso!', 'success');
+                            showToast('✅ Importado localmente!', 'success');
                         }
-                    } else {
-                        showToast('❌ Formato de arquivo inválido!', 'error');
-                    }
-                } catch (err) {
-                    showToast('❌ Erro ao importar arquivo!', 'error');
-                }
+                    } else showToast('❌ Formato inválido!', 'error');
+                } catch (err) { showToast('❌ Erro ao importar!', 'error'); }
             };
             reader.readAsText(file);
             input.value = '';
@@ -807,24 +948,30 @@
         // ===== EVENT LISTENERS =====
         document.getElementById('searchInput').addEventListener('input', render);
         document.getElementById('categoryFilter').addEventListener('change', render);
-
         document.getElementById('loginModal').addEventListener('click', function(e) { if (e.target === this) closeLoginModal(); });
         document.getElementById('viewModal').addEventListener('click', function(e) { if (e.target === this) closeViewModal(); });
         document.getElementById('editModal').addEventListener('click', function(e) { if (e.target === this && isAuthenticated) closeEditModal(); });
         document.getElementById('categoryModal').addEventListener('click', function(e) { if (e.target === this) closeCategoryModal(); });
+        document.getElementById('serverModal').addEventListener('click', function(e) { if (e.target === this) closeServerModal(); });
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                closeLoginModal(); closeViewModal();
+                closeLoginModal(); closeViewModal(); closeServerModal();
                 if (isAuthenticated) { closeEditModal(); closeCategoryModal(); }
             }
         });
 
-        // Inicialização
+        // ===== INICIALIZAÇÃO =====
         loadCategories();
         populateCategoryDropdowns();
+        loadServerConfig();
         checkAuth();
         loadData();
+        
+        // Auto-fetch ao carregar se configurado
+        if (serverConfig.autoFetch && serverConfig.url) {
+            setTimeout(() => fetchFromServer(), 500);
+        }
     </script>
 </body>
 </html>
