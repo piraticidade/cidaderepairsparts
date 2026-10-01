@@ -326,26 +326,23 @@
     <div id="serverModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><i class="fas fa-server"></i> Configurar Servidor (JSONBin)</h2>
+                <h2><i class="fas fa-server"></i> Configurar Servidor (nPoint)</h2>
                 <span class="close-modal" onclick="closeServerModal()">&times;</span>
             </div>
             <div class="sync-notice">
                 <i class="fas fa-exclamation-triangle"></i>
-                <strong>Nota Importante:</strong> Este sistema opera em <strong>Modo Leitura</strong> do servidor. 
-                Para salvar alterações permanentes no banco de dados online, você deve <strong>Exportar o JSON</strong> após editar e colar o conteúdo no site do JSONBin.io.
+                <strong>Nota Importante:</strong> O nPoint.io é público e não exige senha. 
+                Para atualizar o banco online, edite localmente, clique em <strong>"Exportar JSON"</strong> e cole o conteúdo no site do nPoint.io.
             </div>
             <form onsubmit="saveServerConfig(event)">
                 <div class="form-group">
-                    <label>URL do JSONBin</label>
-                    <input type="url" id="serverUrl" required placeholder="https://api.jsonbin.io/v3/b/...">
-                </div>
-                <div class="form-group">
-                    <label>Chave de API (X-Master-Key) <span style="font-weight:400; color:#666;">(Opcional, se o Bin for público)</span></label>
-                    <input type="text" id="serverApiKey" placeholder="Cole sua chave aqui (opcional)">
+                    <label>URL do nPoint</label>
+                    <input type="url" id="serverUrl" required placeholder="https://api.npoint.io/cf3879e812eb73e211bd">
+                    <div class="icon-hint">Use apenas o link base com o ID (ex: https://api.npoint.io/cf3879e812eb73e211bd)</div>
                 </div>
                 <div class="form-group">
                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="checkbox" id="autoFetch" style="width: auto;">
+                        <input type="checkbox" id="autoFetch" style="width: auto;" checked>
                         Carregar automaticamente ao abrir a página
                     </label>
                 </div>
@@ -376,10 +373,9 @@
         };
 
         let categories = {};
-        // URL padrão atualizada para o seu JSONBin.io
+        // URL padrão atualizada para o seu nPoint.io (formato correto sem /inventory/0)
         let serverConfig = { 
-            url: 'https://api.jsonbin.io/v3/b/6abeec22ac6210605a0aaa48', 
-            apiKey: '', 
+            url: 'https://api.npoint.io/cf3879e812eb73e211bd', 
             autoFetch: true 
         };
         
@@ -446,7 +442,7 @@
             const saved = localStorage.getItem(SERVER_CONFIG_KEY);
             if (saved) {
                 try { serverConfig = JSON.parse(saved); } 
-                catch (e) { serverConfig = { url: 'https://api.jsonbin.io/v3/b/6abeec22ac6210605a0aaa48', apiKey: '', autoFetch: true }; }
+                catch (e) { serverConfig = { url: 'https://api.npoint.io/cf3879e812eb73e211bd', autoFetch: true }; }
             }
             updateServerStatus();
         }
@@ -459,7 +455,7 @@
             const status = document.getElementById('serverStatus');
             if (serverConfig.url) {
                 status.className = 'server-status status-ok';
-                status.innerHTML = '<i class="fas fa-check-circle"></i> JSONBin configurado';
+                status.innerHTML = '<i class="fas fa-check-circle"></i> nPoint configurado';
             } else {
                 status.className = 'server-status status-loading';
                 status.innerHTML = '<i class="fas fa-database"></i> Dados locais';
@@ -469,8 +465,7 @@
         function openServerModal() {
             if (!isAuthenticated) return;
             document.getElementById('serverUrl').value = serverConfig.url || '';
-            document.getElementById('serverApiKey').value = serverConfig.apiKey || '';
-            document.getElementById('autoFetch').checked = serverConfig.autoFetch || false;
+            document.getElementById('autoFetch').checked = serverConfig.autoFetch !== false;
             document.getElementById('serverModal').classList.add('active');
         }
 
@@ -481,20 +476,11 @@
         function saveServerConfig(event) {
             event.preventDefault();
             serverConfig.url = document.getElementById('serverUrl').value.trim();
-            serverConfig.apiKey = document.getElementById('serverApiKey').value.trim();
             serverConfig.autoFetch = document.getElementById('autoFetch').checked;
             saveServerConfigData();
             updateServerStatus();
             closeServerModal();
             showToast('✅ Configuração salva!', 'success');
-        }
-
-        function getHeaders() {
-            const headers = { 'Cache-Control': 'no-cache' };
-            if (serverConfig.apiKey) {
-                headers['X-Master-Key'] = serverConfig.apiKey;
-            }
-            return headers;
         }
 
         async function testServerConnection() {
@@ -503,18 +489,16 @@
             
             showLoader('Testando conexão...');
             try {
-                const response = await fetch(url, { method: 'GET', cache: 'no-store', headers: getHeaders() });
+                const response = await fetch(url, { method: 'GET', cache: 'no-store' });
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const data = await response.json();
                 hideLoader();
                 
-                // JSONBin v3 retorna os dados dentro de "record"
-                const rawData = data.record ? data.record : data;
-                const count = Array.isArray(rawData) ? rawData.length : (rawData.inventory ? rawData.inventory.length : 0);
-                showToast(`✅ Conexão OK! ${count} itens encontrados.`, 'success');
+                const rawData = Array.isArray(data) ? data : (data.inventory || []);
+                showToast(`✅ Conexão OK! ${rawData.length} itens encontrados.`, 'success');
             } catch (err) {
                 hideLoader();
-                showToast(`❌ Erro: ${err.message}. Verifique a URL e a Chave de API.`, 'error');
+                showToast(`❌ Erro: ${err.message}. Verifique a URL.`, 'error');
             }
         }
 
@@ -525,26 +509,22 @@
                 return;
             }
             
-            showLoader('Carregando dados do JSONBin...');
+            showLoader('Carregando dados do nPoint...');
             try {
                 const response = await fetch(serverConfig.url, { 
                     method: 'GET', 
-                    cache: 'no-store',
-                    headers: getHeaders()
+                    cache: 'no-store'
                 });
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const data = await response.json();
                 
-                // JSONBin v3 encapsula os dados em "record"
-                const rawData = data.record ? data.record : data;
-                
                 let newData;
-                if (Array.isArray(rawData)) {
-                    newData = rawData;
-                } else if (rawData.inventory && Array.isArray(rawData.inventory)) {
-                    newData = rawData.inventory;
-                    if (rawData.categories) {
-                        categories = { ...defaultCategories, ...rawData.categories };
+                if (Array.isArray(data)) {
+                    newData = data;
+                } else if (data.inventory && Array.isArray(data.inventory)) {
+                    newData = data.inventory;
+                    if (data.categories) {
+                        categories = { ...defaultCategories, ...data.categories };
                         localStorage.setItem(CAT_STORAGE_KEY, JSON.stringify(categories));
                         populateCategoryDropdowns();
                     }
@@ -556,7 +536,7 @@
                 newData = newData.map(item => {
                     const clean = {};
                     Object.keys(item).forEach(key => {
-                        const cleanKey = key.trim();
+                        const cleanKey = key.trim(); // Transforma "id " em "id", "category " em "category"
                         let val = item[key];
                         if (typeof val === 'string') val = val.trim();
                         clean[cleanKey] = val;
@@ -571,7 +551,6 @@
             } catch (err) {
                 hideLoader();
                 showToast(`❌ Erro ao carregar: ${err.message}. Usando dados locais.`, 'error');
-                // Fallback para dados locais se o servidor falhar
                 if (inventory.length === 0) {
                     inventory = [...fallbackInventory];
                     saveData();
@@ -916,7 +895,7 @@
             link.href = url;
             link.download = `pecas-apple-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
-            showToast('📥 JSON Exportado! Cole este conteúdo no JSONBin.io para atualizar o servidor.', 'success');
+            showToast('📥 JSON Exportado! Cole este conteúdo no nPoint.io para atualizar o servidor.', 'success');
         }
 
         function importData(input) {
