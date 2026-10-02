@@ -1,4 +1,19 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -268,7 +283,7 @@
                 <span class="close-modal" onclick="closeViewModal()">&times;</span>
             </div>
             <div id="viewContent"></div>
-            <div class="edit-hint"><i class="fas fa-info-circle"></i> Para editar, faça login (senha: ****).</div>
+            <div class="edit-hint"><i class="fas fa-info-circle"></i> Para editar, faça login (senha: 7766).</div>
         </div>
     </div>
 
@@ -362,6 +377,14 @@
         const SERVER_CONFIG_KEY = 'appleInventoryServerConfig';
         let isAuthenticated = false;
 
+        // ===== FUNÇÃO DE FORMATAÇÃO DE MOEDA (PADRÃO BRASILEIRO) =====
+        function formatCurrency(value) {
+            return 'R$ ' + Number(value).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
         const defaultCategories = {
             'machines': { name: 'Máquinas Completas', icon: 'fa-laptop' },
             'screens': { name: 'Telas', icon: 'fa-tv' },
@@ -373,13 +396,12 @@
         };
 
         let categories = {};
-        // URL padrão atualizada para o seu nPoint.io (formato correto sem /inventory/0)
         let serverConfig = { 
             url: 'https://api.npoint.io/cf3879e812eb73e211bd', 
             autoFetch: true 
         };
         
-        let inventory = []; // Será preenchido pelo servidor ou fallback local
+        let inventory = [];
 
         const fallbackInventory = [
             {id: 2, category: 'machines', description: 'Mac Pro 2013 A1481 erro grafico', quantity: 1, price: 1500, comments: 'casa'},
@@ -532,11 +554,10 @@
                     throw new Error('Formato JSON inválido');
                 }
                 
-                // Limpeza robusta de dados (remove espaços nas chaves e valores, comum em exports de Excel)
                 newData = newData.map(item => {
                     const clean = {};
                     Object.keys(item).forEach(key => {
-                        const cleanKey = key.trim(); // Transforma "id " em "id", "category " em "category"
+                        const cleanKey = key.trim();
                         let val = item[key];
                         if (typeof val === 'string') val = val.trim();
                         clean[cleanKey] = val;
@@ -715,18 +736,18 @@
                 categoryDiv.innerHTML = `
                     <div class="category-header">
                         <h2><i class="fas ${catInfo.icon}"></i> ${catInfo.name}</h2>
-                        <span class="count">${items.length} itens - R$ ${totalValue.toFixed(2)}</span>
+                        <span class="count">${items.length} itens - ${formatCurrency(totalValue)}</span>
                     </div>
                     <div class="category-content">
                         ${items.map(item => `
                             <div class="item" onclick="handleItemClick(${item.id})">
                                 <div class="item-header">
                                     <div class="item-title">${item.description}</div>
-                                    <div class="item-price">R$ ${item.price.toFixed(2)}</div>
+                                    <div class="item-price">${formatCurrency(item.price)}</div>
                                 </div>
                                 <div class="item-details">
                                     <div class="item-detail"><i class="fas fa-box"></i><span>Qtd: ${item.quantity}</span></div>
-                                    <div class="item-detail"><i class="fas fa-calculator"></i><span>Total: R$ ${(item.price * item.quantity).toFixed(2)}</span></div>
+                                    <div class="item-detail"><i class="fas fa-calculator"></i><span>Total: ${formatCurrency(item.price * item.quantity)}</span></div>
                                 </div>
                                 ${item.comments ? `<div class="item-comments"><i class="fas fa-comment"></i> ${item.comments}</div>` : ''}
                             </div>
@@ -749,7 +770,7 @@
             const totalMachines = inventory.filter(i => i.category === 'machines').reduce((s, i) => s + i.quantity, 0);
             const totalMobile = inventory.filter(i => i.category === 'mobile').reduce((s, i) => s + i.quantity, 0);
             document.getElementById('totalItems').textContent = totalItems;
-            document.getElementById('totalValue').textContent = `R$ ${totalValue.toFixed(2)}`;
+            document.getElementById('totalValue').textContent = formatCurrency(totalValue);
             document.getElementById('totalMachines').textContent = totalMachines;
             document.getElementById('totalMobile').textContent = totalMobile;
         }
@@ -762,8 +783,8 @@
                 <div class="view-field"><div class="view-field-label">Categoria</div><div class="view-field-value"><i class="fas ${catInfo.icon}"></i> ${catInfo.name}</div></div>
                 <div class="view-field"><div class="view-field-label">Descrição</div><div class="view-field-value">${item.description}</div></div>
                 <div class="view-field"><div class="view-field-label">Quantidade</div><div class="view-field-value">${item.quantity} unidade(s)</div></div>
-                <div class="view-field"><div class="view-field-label">Valor Unitário</div><div class="view-field-value">R$ ${item.price.toFixed(2)}</div></div>
-                <div class="view-field"><div class="view-field-label">Valor Total</div><div class="view-field-value" style="color:#10b981;font-weight:700;">R$ ${(item.price * item.quantity).toFixed(2)}</div></div>
+                <div class="view-field"><div class="view-field-label">Valor Unitário</div><div class="view-field-value">${formatCurrency(item.price)}</div></div>
+                <div class="view-field"><div class="view-field-label">Valor Total</div><div class="view-field-value" style="color:#10b981;font-weight:700;">${formatCurrency(item.price * item.quantity)}</div></div>
                 ${item.comments ? `<div class="view-field"><div class="view-field-label">Comentários</div><div class="view-field-value">${item.comments}</div></div>` : ''}
             `;
             document.getElementById('viewModal').classList.add('active');
@@ -947,10 +968,24 @@
         checkAuth();
         loadData();
         
-        // Auto-fetch ao carregar se configurado
         if (serverConfig.autoFetch && serverConfig.url) {
             setTimeout(() => fetchFromServer(), 500);
         }
     </script>
 </body>
 </html>
+
+
+              <script>
+                              function formatCurrency(value) {
+    return 'R$ ' + Number(value).toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+
+              </script>
+                        </body>
+                        </html>
+                    
