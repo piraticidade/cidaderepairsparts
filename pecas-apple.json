@@ -28,10 +28,9 @@
       "id": 5,
       "category": "accessories",
       "description": "Timecapsule 2Tb funcionando",
-      "quantity": 4,
+      "quantity": 3,
       "price": 500,
-      "comments": "",
-      "image": ""
+      "comments": ""
     },
     {
       "id": 6,
@@ -473,5 +472,5 @@
       "icon": "fa-tools"
     }
   },
-  "lastUpdate": "2026-10-02T01:50:56.719Z"
+  "lastUpdate": "2026-10-02T01:51:11.491Z"
 }
