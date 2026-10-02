@@ -27,11 +27,11 @@
     {
       "id": 5,
       "category": "accessories",
-      "description": "Timecapsule 2Tb funcionando",
+      "description": "Timecapsule 2Tb",
       "quantity": 4,
       "price": 500,
-      "comments": "",
-      "image": ""
+      "comments": "revisados",
+      "image": "https://support.apple.com/pt-br/docs/accessories/134028"
     },
     {
       "id": 6,
@@ -472,5 +472,6 @@
       "name": "Peças com Defeito",
       "icon": "fa-tools"
     }
-  }
+  },
+  "lastUpdate": "2026-10-02T02:13:15.301Z"
 }
