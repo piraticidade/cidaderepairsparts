@@ -441,6 +441,15 @@
       "price": 700,
       "comments": "com ssd 128gb",
       "image": ""
+    },
+    {
+      "id": 58,
+      "category": "machines",
+      "description": "Macbook Pro A2141 Silver",
+      "quantity": 1,
+      "price": 3500,
+      "comments": "liga porem nao inicia sistema nem imagem na tela",
+      "image": ""
     }
   ],
   "categories": {
@@ -472,6 +481,5 @@
       "name": "Peças com Defeito",
       "icon": "fa-tools"
     }
-  },
-  "lastUpdate": "2026-10-03T03:14:18.438Z"
+  }
 }
