@@ -441,15 +441,6 @@
       "price": 700,
       "comments": "com ssd 128gb",
       "image": ""
-    },
-    {
-      "id": 58,
-      "category": "machines",
-      "description": "Macbook Pro A2141",
-      "quantity": 1,
-      "price": 3000,
-      "comments": "liga sem iniciar imagem e desliga.",
-      "image": ""
     }
   ],
   "categories": {
@@ -481,5 +472,6 @@
       "name": "Peças com Defeito",
       "icon": "fa-tools"
     }
-  }
+  },
+  "lastUpdate": "2026-10-03T03:07:39.287Z"
 }
